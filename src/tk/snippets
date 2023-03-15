@@ -1,0 +1,25 @@
+	err, fnt := tk.GetFonts()
+	if err != nil {
+		log.Println(err)
+	} else {
+		log.Println(fnt)
+	}
+
+/*
+// Initial tcl commands 
+var hello = string(`
+	namespace import ttk::*
+	#wm attributes . -fullscreen 1
+	set Text "Test"
+	ttk::label .lb -textvariable Text
+	pack .lb
+	ttk::button .hello -text "Hello, World!" -command { puts "Hello" }
+	pack .hello
+	ttk::button .exit -text "Exit!" -command { exit }
+	pack .exit
+`)
+*/
+
+	wm attributes . -fullscreen 1
+	ttk::button .exit -text "Exit" -command { exit }
+	pack .exit

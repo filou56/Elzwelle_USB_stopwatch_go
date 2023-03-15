@@ -1,0 +1,36 @@
+//	b := tk.Button("Hello",tk.Option{"command",`{ puts "Hello" }`})
+
+//func run() {
+//	var current26 time.Time
+//	var current19 time.Time
+//	
+//	chip, err := gpio.OpenChip("gpiochip0")
+//	if err != nil {
+//		return
+//	}
+//	defer chip.Close()
+//	
+//	line26, err := chip.OpenLineWithEvents(26, gpio.Input, gpio.RisingEdge, "gpio")
+//	if err != nil {
+//		return
+//	}
+//	defer line26.Close()	
+//	
+//	line19, err := chip.OpenLineWithEvents(19, gpio.Input, gpio.RisingEdge, "gpio")
+//	if err != nil {
+//		return
+//	}
+//	defer line19.Close()
+//
+//	for {
+//		fmt.Println("WAIT")
+//		select {
+//			case event := <- line26.Events():
+//				fmt.Println("E26",event.Time.Format("15:04:05.000000"),event.Time.Sub(current26))		
+//				current26 = event.Time	
+//			case event := <- line19.Events():
+//				fmt.Println("E19",event.Time.Format("15:04:05.000000"),event.Time.Sub(current19))		
+//				current19 = event.Time			
+//		}
+//	}
+//}

@@ -1,0 +1,27 @@
+#!/usr/bin/env wish
+
+package require Tktable
+
+table .table \
+  -rows 5 \
+  -cols 8 \
+  -titlerows 1 \
+  -titlecols 0 \
+  -height 5 \
+  -width 25 \
+  -rowheight 1 \
+  -colwidth 9 \
+  -selectmode extended \
+  -variable Wert \
+
+pack .table -side right -fill both -expand 1
+  
+for {set Zeile 0} {$Zeile <= 4} {incr Zeile} {
+  for {set Spalte 0} {$Spalte <= 7} {incr Spalte} {
+    if {$Zeile == 0} {
+      set Wert($Zeile,$Spalte) Titel$Spalte
+    } else {
+      set Wert($Zeile,$Spalte) $Zeile$Spalte
+    }
+  }
+}

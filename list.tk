@@ -1,0 +1,15 @@
+#!/usr/bin/env wish
+
+package require Tktable
+
+
+ttk::frame .fr
+listbox .fr.lbox -width 15 -height 15 -yscrollcommand {.fr.sbY set} -listvariable Liste
+ttk::scrollbar .fr.sbY -command {.fr.lbox yview}
+pack .fr.sbY -side right -fill y
+pack .fr.lbox -side top -expand yes -fill both
+pack .fr -side top -expand yes -fill both
+
+set Liste {Anton Berta Caesar Dora Emil Friedrich Gustav Heinrich Ida Julius Kaufmann}
+set Liste [concat $Liste {Ludwig Martha Nordpol Otto Paula Quelle Richard Samuel Schule Theodor}]
+set Liste [concat $Liste {Ulrich Viktor Wilhelm Xanthippe Ypsilon Zacharias}]
