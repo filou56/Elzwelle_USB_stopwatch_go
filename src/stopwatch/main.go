@@ -140,8 +140,8 @@ func main() {
 		//tk.Fullscreen()
 		//tk.Geometry(0,0,800,400)
 	} else {
-		tk.Zoomed()
-		//tk.Geometry(0,0,800,400)	
+		//tk.Zoomed()
+		tk.Geometry(0,0,800,400)	
 	}
 	
 	//startupTime		:= time.Now()	
@@ -193,6 +193,19 @@ func main() {
 			},
 		)
 	}
+	
+	syncEntry := tk.Entry(tk.ROOT,"TEST",tk.FontSize(16))
+	syncEntry.Pack(tk.PACK_X)
+	
+	syncButton := tk.Button(tk.ROOT,"Sync",tk.FontSize(16))
+	syncButton.Pack(tk.PACK_X)
+	syncButton.SetOnClick( func() {
+			e,v := syncEntry.GetVariable()
+			if e == nil {
+				log.Println("Sync:",v)
+			}
+		},
+	)
 	
 	go notify.Listen()	
 	
@@ -291,8 +304,9 @@ func main() {
 			
 			for loop {
 				n,err := port.Read(buf)
+
 				if err != nil {
-					log.Printf("ERROR %v\n",err)
+					//log.Printf("ERROR %v\n",err)
 				} else {
 					if n == 0 {
 						usbNotify("ERROR read: EOF!\n\nCheck USB Adapter.\nRestart App.",8000)
@@ -323,11 +337,11 @@ func main() {
 								now := time.Now()
 								t,_ := strconv.Atoi(string(msg[1:idx]))
 								usbSyncEvent = (int64(t)/100)*100
-								log.Println(usbSyncEvent)
+								//log.Println(usbSyncEvent)
 								la.SetText(timestamp(now, usbSyncEvent))
 							}
-							log.Println(string(msg[0:idx]))
-							log.Printf("%v\n",msg[0])
+							//log.Println(string(msg[0:idx]))
+							//log.Printf("%v\n",msg[0])
 							idx=0
 						default:
 							if idx < 20 {

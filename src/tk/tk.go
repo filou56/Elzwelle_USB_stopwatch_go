@@ -116,10 +116,11 @@ func init() {
 		buf := bufio.NewReader(stdout) 		
 	    for {
 	        line, _, err := buf.ReadLine()
+	        //line, err := buf.ReadString('\n')	        
 	        if err != nil {
 		        log.Fatal(err)
 		    }
-		    //log.Println("Event:\t",string(line))
+		    //log.Println("ReadLine:\t",string(line))
 		    Event <- string(line)
 	    }	    
 	}()

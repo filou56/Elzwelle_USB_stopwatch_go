@@ -15,8 +15,11 @@ func onClickEvent(id string) string {
 func eventHandler() {
 	var ev_map map[string]interface{}
 	
+	//ev_map = make(map[string]interface{})
+	
 	for {
 		msg := <- Event
+		ev_map = make(map[string]interface{})
 		//log.Println("\nEventHandler",string(msg))
 		
 		dec := json.NewDecoder(strings.NewReader(string(msg)))
