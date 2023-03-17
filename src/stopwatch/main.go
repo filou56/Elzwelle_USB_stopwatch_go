@@ -93,7 +93,7 @@ func mqttReceive(client mqtt.Client, msg mqtt.Message) {
 			case float64 :
 				masterOffset := int64(items["MASTER"].(float64)*1000)
 				log.Println("Master Clock: ",masterOffset)
-				masterMillis = masterOffset				
+				masterMillis = masterMillis + masterOffset				
 			}		
 		}
 	}
