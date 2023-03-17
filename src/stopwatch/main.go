@@ -16,6 +16,7 @@ import (
 	"notify"
 	"util"
 	"sysinfo"
+	"strings"
 )
 
 var (
@@ -29,6 +30,7 @@ var (
  	usbStartMillis		int64
 	usbFinishMillis		int64
 	usbSyncEvent		int64
+	masterMillis		int64	= 0
 	publishInterval		int
 )
 
@@ -68,30 +70,48 @@ func mqttClientOptions(clientId string, uri *url.URL) *mqtt.ClientOptions {
 		log.Println("MQTT reconnecting")
 	})
 	
-//	opts.SetDefaultPublishHandler(mqtthandler.MqttReceive)
+	opts.SetDefaultPublishHandler(mqttReceive)
 	
 	opts.SetOnConnectHandler(func(c mqtt.Client) {
-	       log.Printf("Client connected\n")
-//        //Subscribe here, otherwise after connection lost, you may not receive any message
-//        if token := c.Subscribe(fmt.Sprintf("bws/cmd/+/%s",bwsId), 0, nil); token.Wait() && token.Error() != nil {
-//            log.Println(token.Error())
-//            // TODO handle Error
-//        }
+	    log.Printf("MQTT Client connected\n")
+        //Subscribe here, otherwise after connection lost, you may not receive any message
+        if token := c.Subscribe(fmt.Sprintf("stopwatch/cmd/+"), 0, nil); token.Wait() && token.Error() != nil {
+            log.Println(token.Error())
+            // TODO handle Error
+        }
     })
 	return opts
 }
 
+func mqttReceive(client mqtt.Client, msg mqtt.Message) {
+	log.Printf("Sheet:\tMQTT received [%s] %s\n", msg.Topic(), string(msg.Payload()))
+	if strings.Contains(msg.Topic(),"stopwatch/cmd/sync") {
+		var items map[string]interface{}		
+		items = util.DecodePayload(msg.Payload())
+		if (items["MASTER"] != nil) { 
+			switch items["MASTER"].(type) {
+			case float64 :
+				masterOffset := int64(items["MASTER"].(float64)*1000)
+				log.Println("Master Clock: ",masterOffset)
+				masterMillis = masterOffset				
+			}		
+		}
+	}
+}
+
 func publish(channel int, now time.Time, stamp int64) {
+	stamp = stamp + masterMillis
 	payload :=fmt.Sprintf(`{"Channel":%d,"Time":"%s","Stamp":%4.2f}`,channel,now.Format("15:04:05"),float64(stamp)/1000.0)
 	mqttpipe.Send <- mqttpipe.Message{"stopwatch/data",payload}
 }
 
 func timestamp(now time.Time, stamp int64) string {
+	stamp = stamp + masterMillis
 	return fmt.Sprintf("(%s) %4.2fs",now.Format("15:04:05"),float64(stamp)/1000.0)
 }
 
 func millis( clock time.Duration ) int64 {
-	return int64(clock)/1000000	
+	return int64(clock)/1000000
 }
 
 func uptime() time.Duration {
@@ -194,18 +214,18 @@ func main() {
 		)
 	}
 	
-	syncEntry := tk.Entry(tk.ROOT,"TEST",tk.FontSize(16))
-	syncEntry.Pack(tk.PACK_X)
-	
-	syncButton := tk.Button(tk.ROOT,"Sync",tk.FontSize(16))
-	syncButton.Pack(tk.PACK_X)
-	syncButton.SetOnClick( func() {
-			e,v := syncEntry.GetVariable()
-			if e == nil {
-				log.Println("Sync:",v)
-			}
-		},
-	)
+//	syncEntry := tk.Entry(tk.ROOT,"TEST",tk.FontSize(16))
+//	syncEntry.Pack(tk.PACK_X)
+//	
+//	syncButton := tk.Button(tk.ROOT,"Sync",tk.FontSize(16))
+//	syncButton.Pack(tk.PACK_X)
+//	syncButton.SetOnClick( func() {
+//			e,v := syncEntry.GetVariable()
+//			if e == nil {
+//				log.Println("Sync:",v)
+//			}
+//		},
+//	)
 	
 	go notify.Listen()	
 	
