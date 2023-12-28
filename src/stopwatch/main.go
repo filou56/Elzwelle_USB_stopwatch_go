@@ -15,7 +15,7 @@ import (
 	"strconv"
 	"notify"
 	"util"
-	"sysinfo"
+//	"sysinfo"
 	"strings"
 )
 
@@ -32,7 +32,13 @@ var (
 	usbSyncEvent		int64
 	masterMillis		int64	= 0
 	publishInterval		int
+	
+	baseTime			time.Time
 )
+
+func init() {	
+	baseTime = time.Now()
+}
 
 //------------------------- MQTT ------------------------
 func mqttConnect(clientId string, uri *url.URL) mqtt.Client {
@@ -110,12 +116,36 @@ func timestamp(now time.Time, stamp int64) string {
 	return fmt.Sprintf("(%s) %4.2fs",now.Format("15:04:05"),float64(stamp)/1000.0)
 }
 
+/*
+
+https://stackoverflow.com/questions/71689285/how-to-get-monotonic-part-of-time-time-in-go
+
+The monotonic clock is just used for differences between times. 
+The absolute value of the monotonic clock is undefined and you 
+should not try to get it. I think what you really want for your 
+timestamp is the duration from a base time.
+
+func init() {
+    baseTime = time.Now()
+}
+
+// NowTimestamp returns really just the duration from the base time
+func NowTimestamp() time.Duration {
+    return time.Now().Sub(baseTime)
+}
+
+*/
+
 func millis( clock time.Duration ) int64 {
 	return int64(clock)/1000000
 }
 
+//func uptime() time.Duration {
+//	return sysinfo.Get().Uptime	
+//}
+
 func uptime() time.Duration {
-	return sysinfo.Get().Uptime	
+    return time.Now().Sub(baseTime)
 }
 
 func main() {	
