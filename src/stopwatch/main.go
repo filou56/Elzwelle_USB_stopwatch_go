@@ -7,13 +7,13 @@ import (
 	"time"
 	"os"
 	"flag"
-	"github.com/mkch/gpio"
+//	"github.com/mkch/gpio"
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"net/url"
 	"mqttpipe"
 	"github.com/goburrow/serial"
 	"strconv"
-	"notify"
+//	"notify"
 	"util"
 	"runtime"
 	"strings"
@@ -150,8 +150,8 @@ func uptime() time.Duration {
 
 func main() {	
 	var (
-		startTime 		time.Time
-		finishTime 		time.Time
+//		startTime 		time.Time
+//		finishTime 		time.Time
 	)
 	
 	fmt.Println(runtime.GOOS)
@@ -197,7 +197,7 @@ func main() {
 	}
 	
 	//startupTime		:= time.Now()	
-	eventStartup 	:= time.Unix(0,0)
+//	eventStartup 	:= time.Unix(0,0)
 		
 	//la := tk.Label(tk.ROOT,timestamp(startupTime,millis(time.Now().Sub(startupTime))),tk.FontSize(18))
 	la := tk.Label(tk.ROOT,timestamp(time.Now(),millis(uptime())),tk.FontSize(18))
@@ -259,73 +259,73 @@ func main() {
 //		},
 //	)
 	
-	go notify.Listen()	
+//	go notify.Listen()	
 	
 	//---------------------------- PI GPIO using Linux Kernel Driver----------------------------
 	
 	// Init GPIO, check for pi otherwise use only buttons or USB
 	if _,err := os.Stat("/boot/config.txt"); err == nil {
-		chip, err := gpio.OpenChip("gpiochip0")
-		if err != nil {
-			return
-		}
-		defer chip.Close()
-		
-		// GPIO 26 START Trigger
-		line26, err := chip.OpenLineWithEvents(26, gpio.Input, gpio.FallingEdge, "gpio")
-		if err != nil {
-			return
-		}
-		defer line26.Close()	
-		
-		// GPIO 19 FINISH Trigger
-		line19, err := chip.OpenLineWithEvents(19, gpio.Input, gpio.FallingEdge, "gpio")
-		if err != nil {
-			return
-		}
-		defer line19.Close()
-		
-		tick := make(chan int)
-		
-		go func() {
-			for {
-				time.Sleep(time.Duration(1000 * time.Millisecond))
-				tick <- 0
-			}
-		}()
-		//---------------------------- GPIO Inerrupt Worker Loop -----------------------------
-		
-		for {
-			select {
-				case event := <- line26.Events():
-				now := time.Now()
-				if event.Time.Sub(startTime) > time.Millisecond * time.Duration(debounceStart) {
-					startTime = event.Time	
-					if ! startLocked(publishInterval) {
-						startList.ListAppend(timestamp(now, millis(event.Time.Sub(eventStartup))))					
-						publish(1,now,millis(now.Sub(eventStartup)))	
-					}
-				}
-				case event := <- line19.Events():
-				now := time.Now()
-				if event.Time.Sub(finishTime) > time.Millisecond * time.Duration(debounceFinish) {		
-					finishTime = event.Time
-					if ! finishLocked(publishInterval) {
-						finishList.ListAppend(timestamp(now, millis(event.Time.Sub(eventStartup))))			
-						publish(2,now,millis(now.Sub(eventStartup)))
-					}		
-				}
-				case <- tick:
-				now := time.Now()
-				la.SetText(timestamp(now,millis(uptime())))
-//				la.SetText(timestamp(now, millis(now.Sub(startupTime))))
-//				stamp := timestamp(now, millis(now.Sub(startupTime)))
-//				la.SetText(stamp[0:11]+"00)")
-			}
-		}
+//		chip, err := gpio.OpenChip("gpiochip0")
+//		if err != nil {
+//			return
+//		}
+//		defer chip.Close()
+//		
+//		// GPIO 26 START Trigger
+//		line26, err := chip.OpenLineWithEvents(26, gpio.Input, gpio.FallingEdge, "gpio")
+//		if err != nil {
+//			return
+//		}
+//		defer line26.Close()	
+//		
+//		// GPIO 19 FINISH Trigger
+//		line19, err := chip.OpenLineWithEvents(19, gpio.Input, gpio.FallingEdge, "gpio")
+//		if err != nil {
+//			return
+//		}
+//		defer line19.Close()
+//		
+//		tick := make(chan int)
+//		
+//		go func() {
+//			for {
+//				time.Sleep(time.Duration(1000 * time.Millisecond))
+//				tick <- 0
+//			}
+//		}()
+//		//---------------------------- GPIO Inerrupt Worker Loop -----------------------------
+//		
+//		for {
+//			select {
+//				case event := <- line26.Events():
+//				now := time.Now()
+//				if event.Time.Sub(startTime) > time.Millisecond * time.Duration(debounceStart) {
+//					startTime = event.Time	
+//					if ! startLocked(publishInterval) {
+//						startList.ListAppend(timestamp(now, millis(event.Time.Sub(eventStartup))))					
+//						publish(1,now,millis(now.Sub(eventStartup)))	
+//					}
+//				}
+//				case event := <- line19.Events():
+//				now := time.Now()
+//				if event.Time.Sub(finishTime) > time.Millisecond * time.Duration(debounceFinish) {		
+//					finishTime = event.Time
+//					if ! finishLocked(publishInterval) {
+//						finishList.ListAppend(timestamp(now, millis(event.Time.Sub(eventStartup))))			
+//						publish(2,now,millis(now.Sub(eventStartup)))
+//					}		
+//				}
+//				case <- tick:
+//				now := time.Now()
+//				la.SetText(timestamp(now,millis(uptime())))
+////				la.SetText(timestamp(now, millis(now.Sub(startupTime))))
+////				stamp := timestamp(now, millis(now.Sub(startupTime)))
+////				la.SetText(stamp[0:11]+"00)")
+//			}
+//		}
 	} else {
 		if usbStopwatch {
-			usbNotify := notify.Notification()
+//			usbNotify := notify.Notification()
 			
 			buf 	:= make([]byte, 1)
 			loop 	:= true
@@ -341,7 +341,7 @@ func main() {
 				Timeout:	100 * time.Millisecond,
 			})
 			if err != nil {
-				usbNotify("ERROR Opend USB Serial Port!\n\nCheck USB Adapter.\nRestart App.",8000)
+//				usbNotify("ERROR Opend USB Serial Port!\n\nCheck USB Adapter.\nRestart App.",8000)
 				tk.Done()
 				log.Fatal(err)
 			}
@@ -361,7 +361,7 @@ func main() {
 					//log.Printf("ERROR %v\n",err)
 				} else {
 					if n == 0 {
-						usbNotify("ERROR read: EOF!\n\nCheck USB Adapter.\nRestart App.",8000)
+//						usbNotify("ERROR read: EOF!\n\nCheck USB Adapter.\nRestart App.",8000)
 					}
 				}
 
