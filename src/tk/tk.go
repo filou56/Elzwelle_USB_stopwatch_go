@@ -33,14 +33,14 @@ var frameWindow = string(`
 #	source "azure.tcl"
 #	set_theme dark
 #   ------- ttkthemes -------
-	source /usr/share/tcltk/ttkthemes/themes/pkgIndex.tcl
-	source /usr/share/tcltk/ttkthemes/png/pkgIndex.tcl
+#	source /usr/share/tcltk/ttkthemes/themes/pkgIndex.tcl
+#	source /usr/share/tcltk/ttkthemes/png/pkgIndex.tcl
 #	package require ttkthemes 1.0
 	
 	namespace import ttk::*
 	
 #	option add *Font {Helvetica 18} widgetDefault
-	ttk::setTheme breeze
+#	ttk::setTheme breeze
 
 #	wm attributes . -fullscreen 1
 #	wm geometry . 800x800+0+0
