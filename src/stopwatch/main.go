@@ -15,7 +15,7 @@ import (
 	"strconv"
 	"notify"
 	"util"
-//	"sysinfo"
+	"runtime"
 	"strings"
 )
 
@@ -153,6 +153,8 @@ func main() {
 		startTime 		time.Time
 		finishTime 		time.Time
 	)
+	
+	fmt.Println(runtime.GOOS)
 	
 	flag.StringVar(&mqttHost,		"mqtt", 	"//localhost:1883/","MQTT Host")
 	flag.StringVar(&usbDevice,		"device", 	"/dev/ttyUSB0", 	"USB Device")
